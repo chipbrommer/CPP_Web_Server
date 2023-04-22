@@ -16,7 +16,6 @@ namespace Essentials
 		int8_t start();
 	protected:
 	private:
-		struct mg_mgr*	mManager;
 		std::string		mAddress;
 		uint16_t		mPort;
 	};
