@@ -11,8 +11,8 @@ add_executable (
 	"Source/WebsocketClient/websocket_client.h" 
 	"Source/WebsocketClient/websocket_client.cpp" 
 	"Source/WebsocketServer/websocket_server_config.h"
-	"Source/Mongoose/mongoose.c"
-	"Source/Mongoose/mongoose.h"
+	
+	
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
