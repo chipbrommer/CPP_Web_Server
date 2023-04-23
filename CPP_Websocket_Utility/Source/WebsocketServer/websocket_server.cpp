@@ -18,13 +18,13 @@ namespace Essentials
 			if (mg_http_match_uri(hm, "/"))
 			{
 				// Catch an empty path "localhost:port"
-				mg_http_reply(c, 200, "Content-Type: text/html\r\n", "<div>Hello, World</div>");
+				mg_http_reply(c, 200, "Content-Type: text/plain\r\n", "Hello, %s\n", "world");
 			}
 			else if (mg_http_match_uri(hm, "/index"))
 			{
 				// yes, build the configuration web page response
 				//
-				mg_http_reply(c, 200, "Content-Type: text/html\r\n", "<div>Hello, Index</div>");
+				mg_http_reply(c, 200, "Content-Type: text/plain\r\n", "Hello, %s\n", "index");
 			}
 
             // Serve static files (so they get the ASEI logo)
