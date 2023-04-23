@@ -60,8 +60,8 @@ namespace Essentials
 		mg_http_listen(&mManager, fullAddress.c_str(), eventCallback, NULL); // Create HTTP listener
 
 		// Display some connection related data. 
-		MG_INFO(("Mongoose version : v%s", MG_VERSION));
-		MG_INFO(("Listening on     : %s", fullAddress.c_str()));
+		MG_INFO(("Mongoose version : v%s",	MG_VERSION));
+		MG_INFO(("Listening on     : %s",	fullAddress.c_str()));
 		MG_INFO(("Web root         : [%s]", mRootDirectory.c_str()));
 
 		// Infinite for loop to poll for events. 
