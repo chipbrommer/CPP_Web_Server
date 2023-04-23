@@ -7,7 +7,6 @@ namespace Essentials
 	class WebsocketClient
 	{
 	public:
-		WebsocketClient();
 		WebsocketClient(const std::string& address, const uint16_t port);
 		~WebsocketClient();
 		int8_t setAddress(const std::string& address);

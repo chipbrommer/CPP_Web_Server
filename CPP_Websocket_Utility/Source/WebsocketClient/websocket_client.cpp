@@ -2,11 +2,6 @@
 
 namespace Essentials
 {
-	WebsocketClient::WebsocketClient()
-	{
-
-	}
-
 	WebsocketClient::WebsocketClient(const std::string& address, const uint16_t port)
 	{
 		this->mAddress = address;

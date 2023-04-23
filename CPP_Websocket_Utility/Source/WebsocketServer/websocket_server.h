@@ -18,5 +18,9 @@ namespace Essentials
 	private:
 		std::string		mAddress;
 		uint16_t		mPort;
+		struct mg_mgr	mManager;
+		bool			mInitialized;
+		bool			mAddressSet;
+		bool			mPortSet;
 	};
 }
