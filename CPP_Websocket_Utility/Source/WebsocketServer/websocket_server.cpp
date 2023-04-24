@@ -33,6 +33,7 @@ namespace Essentials
 
 		if (mRootDirectory == root)
 		{
+			web_root = mRootDirectory;
 			return 0;
 		}
 

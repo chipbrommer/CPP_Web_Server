@@ -47,25 +47,41 @@ namespace Essentials
 		/// <param name="fn_data">- User data.</param>
 		static void eventCallback(struct mg_connection* c, int ev, void* ev_data, void* fn_data)
 		{
-			// Received an HTTP message
-			if (ev == MG_EV_HTTP_MSG)
+			if (ev == MG_EV_OPEN)
 			{
-				// event data is a Mongoose HTTP message structure
+				// c->is_hexdumping = 1;
+			}
+			else if (ev == MG_EV_HTTP_MSG)
+			{
 				struct mg_http_message* hm = (struct mg_http_message*)ev_data;
 
-				if (mg_http_match_uri(hm, "/"))
+				if (mg_http_match_uri(hm, "/websocket"))
+				{
+					// Upgrade to websocket..
+					mg_ws_upgrade(c, hm, NULL);
+				}
+				else if (mg_http_match_uri(hm, "/rest"))
+				{
+					// Serve REST response
+					mg_http_reply(c, 200, "", "{\"result\": %d}\n", 123);
+				}
+				else if (mg_http_match_uri(hm, "/hello"))
 				{
 					mg_http_reply(c, 200, "Content-Type: text/plain\r\n", "Hello, %s\n", "world");
 				}
-				else if (mg_http_match_uri(hm, "/index"))
+				else
 				{
-					mg_http_reply(c, 200, "Content-Type: text/plain\r\n", "Hello, %s\n", "index");
+					struct mg_http_serve_opts opts;
+					memset(&opts, 0, sizeof(opts));
+					opts.root_dir = web_root.c_str();
+					mg_http_serve_dir(c, reinterpret_cast<mg_http_message*>(ev_data), &opts);
 				}
-
-				struct mg_http_serve_opts opts;
-				memset(&opts, 0, sizeof(opts));
-				opts.root_dir = DEFAULT_WEB_ROOT;
-				mg_http_serve_dir(c, reinterpret_cast<mg_http_message*>(ev_data), &opts);
+			}
+			else if (ev == MG_EV_WS_MSG)
+			{
+				// Got websocket frame. Received data is wm->data. Echo it back!
+				struct mg_ws_message* wm = (struct mg_ws_message*)ev_data;
+				mg_ws_send(c, wm->data.ptr, wm->data.len, WEBSOCKET_OP_TEXT);
 			}
 			(void)fn_data;
 		}
