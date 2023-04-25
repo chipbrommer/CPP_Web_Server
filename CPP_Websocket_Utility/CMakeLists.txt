@@ -17,15 +17,15 @@ add_executable (
 	"Source/WebsocketServer/website/style.css"
 )
 
-SET(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source/WebsocketServer/website")
-SET(DESTINATION_DIR "C:/website")
+set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source/WebsocketServer/website")
+set(DESTINATION_DIR "C:/website")
 
 if (UNIX)
     execute_process(COMMAND "${CMAKE_COMMAND}" -E create_symlink "${SOURCE_DIR}" "${DESTINATION_DIR}")
 elseif(WIN32)
-    file(TO_NATIVE_PATH "${DESTINATION_DIR}" _dstDir)
-    file(TO_NATIVE_PATH "${SOURCE_DIR}" _srcDir)
-    execute_process(COMMAND cmd.exe /c mklink /J "${_dstDir}" "${_srcDir}")
+    file(TO_NATIVE_PATH "${DESTINATION_DIR}" DST_DIR)
+    file(TO_NATIVE_PATH "${SOURCE_DIR}" SRC_DIR)
+    execute_process(COMMAND cmd.exe /c mklink /J "${DST_DIR}" "${SRC_DIR}")
 endif()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
