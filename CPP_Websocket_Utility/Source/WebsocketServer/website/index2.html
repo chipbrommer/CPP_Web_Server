@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chip's Websockets Example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark">
+    <header>
+        <h1>Websocket Example</h1>
+        <div id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </nav>
+    <main>
+        <p>Welcome to the Websocket Example!</p>
+        <form id="message-form">
+            <label for="message-input">Enter a message:</label>
+            <input type="text" id="message-input" name="message">
+            <input type="submit" value="Send">
+        </form>
+        <ul id="messages"></ul>
+    </main>
+    <div id="settings-modal">
+        <div class="modal-content">
+            <h2>Settings</h2>
+            <form id="settings-form">
+                <label for="theme-select">Select a theme:</label>
+                <select id="theme-select" name="theme">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                </select>
+                <input type="submit" value="Save">
+            </form>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

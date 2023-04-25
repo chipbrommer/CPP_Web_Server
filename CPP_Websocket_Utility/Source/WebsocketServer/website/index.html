@@ -1,47 +1,124 @@
 <!DOCTYPE html>
-<html>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmIh7cO4g6J7peNuJW+W" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js" integrity="sha512-1r0cx8ZJukmZvvl0bkr2gj+JfWzDl+JbeMV9p+73CHG5Zlvf5Sl5v1cEReYw6PYB8W/pzHkxhUfnXQ2oDnCjKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Smooth scrolling script -->
+<script>
+    $(document).ready(function () {
+        // Add smooth scrolling to all links
+        $("a").on('click', function (event) {
+            if (this.hash !== "") {
+                // Prevent default anchor click behavior
+                event.preventDefault();
+
+                // Store hash
+                var hash = this.hash;
+
+                // Using jQuery's animate() method to add smooth page scroll
+                $('html, body').animate({
+                    scrollTop: $(hash).offset().top
+                }, 800, function () {
+
+                    // Add hash (#) to URL when done scrolling (default click behavior)
+                    window.location.hash = hash;
+                });
+            } // End if
+        });
+    });
+</script>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chip's Websockets Example</title>
-    <link rel="stylesheet" href="style.css">
+    <title>My GitHub Repositories</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="style2.css">
 </head>
-<body class="dark">
-    <header>
-        <h1>Websocket Example</h1>
-        <div id="menu-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">My Website</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#code-section">Code</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about-section">About Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#socials-section">Socials</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Header section with abstract image -->
+    <header class="header">
+        <div class="header-content">
+            <h1>Welcome to My Portfolio</h1>
         </div>
     </header>
-    <nav>
-        <ul>
-            <li><a href="#">Settings</a></li>
-        </ul>
-    </nav>
-    <main>
-        <p>Welcome to the Websocket Example!</p>
-        <form id="message-form">
-            <label for="message-input">Enter a message:</label>
-            <input type="text" id="message-input" name="message">
-            <input type="submit" value="Send">
-        </form>
-        <ul id="messages"></ul>
-    </main>
-    <div id="settings-modal">
-        <div class="modal-content">
-            <h2>Settings</h2>
-            <form id="settings-form">
-                <label for="theme-select">Select a theme:</label>
-                <select id="theme-select" name="theme">
-                    <option value="dark">Dark</option>
-                    <option value="light">Light</option>
-                </select>
-                <input type="submit" value="Save">
-            </form>
+
+    <section id="code-section">
+        <div class="container my-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="card-title">Project 1</h2>
+                            <p class="card-text">Description of project 1</p>
+                            <a href="https://github.com/username/repo1" class="btn btn-primary">GitHub repository</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="card-title">Project 2</h2>
+                            <p class="card-text">Description of project 2</p>
+                            <a href="https://github.com/username/repo2" class="btn btn-primary">GitHub repository</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="card-title">Project 3</h2>
+                            <p class="card-text">Description of project 3</p>
+                            <a href="https://github.com/username/repo3" class="btn btn-primary">GitHub repository</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more columns and cards for each project -->
+            </div>
         </div>
+    </section>
+
+    <div class="container about-section" id="about-section">
+        <h2>About Me</h2>
+        <p>I am a web developer with a passion for creating beautiful and functional websites. In my free time, I enjoy photography and exploring new technologies.</p>
+        <h3>Instagram</h3>
+        <div class="instagram-photos"></div>
     </div>
-    <script src="app.js"></script>
+
+    <section id="socials-section">
+        <div class="container my-5">
+            <h2>Socials</h2>
+            <p>Here is where you can find me on social media:</p>
+            <ul>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">LinkedIn</a></li>
+            </ul>
+        </div>
+    </section>
+
 </body>
 </html>
