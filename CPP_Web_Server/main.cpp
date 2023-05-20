@@ -7,8 +7,8 @@ int main()
 
 	Essentials::Communications::Web_Server ws;
 
-	std::string address = "http://0.0.0.0";
-	int16_t port = 8000;
+	std::string address = "http://127.0.0.1";
+	int16_t port = 80;
 
 #ifdef WIN32
 	std::string root = "C:/website";

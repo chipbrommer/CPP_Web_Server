@@ -48,6 +48,7 @@ namespace Essentials
 			mAddress		= address;
 			mPort			= port;
 			mRootDirectory	= root;
+			rootAddress		= root; // Forward the new address to the rootAddress static address holder. 
 		}
 
 		int8_t Web_Server::Start()

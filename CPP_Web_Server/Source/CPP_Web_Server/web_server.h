@@ -48,6 +48,9 @@ namespace Essentials
 					std::to_string(WEB_SERVER_VERSION_PATCH) + " - b" +
 					std::to_string(WEB_SERVER_VERSION_BUILD) + ".\n";
 
+		/// @brief Temporary solution for static IP in the class event callback
+		static std::string rootAddress = "C:/website";
+
 		/// @brief Web server enum for error codes
 		enum class WebServerError : uint8_t
 		{
@@ -146,11 +149,35 @@ namespace Essentials
 				}
 				else if (event == MG_EV_HTTP_MSG)
 				{
-					std::cout << "HTTP EVENT!\n";
+					mg_http_message* hm = (mg_http_message*)eventData;
+
+					if (mg_http_match_uri(hm, "/websocket"))
+					{
+						// Upgrade to websocket..
+						mg_ws_upgrade(conn, hm, NULL);
+					}
+					else if (mg_http_match_uri(hm, "/rest"))
+					{
+						// Serve REST response
+						mg_http_reply(conn, 200, "", "{\"result\": %d}\n", 123);
+					}
+					else if (mg_http_match_uri(hm, "/hello"))
+					{
+						mg_http_reply(conn, 200, "Content-Type: text/plain\r\n", "Hello, %s\n", "world");
+					}
+					else
+					{
+						struct mg_http_serve_opts opts;
+						memset(&opts, 0, sizeof(opts));
+						opts.root_dir = rootAddress.c_str();
+						mg_http_serve_dir(conn, reinterpret_cast<mg_http_message*>(eventData), &opts);
+					}
 				}
 				else if (event == MG_EV_WS_MSG)
 				{
-					std::cout << "WS EVENT!\n";
+					// Got websocket frame. Received data is wm->data. Echo it back!
+					mg_ws_message* wm = (mg_ws_message*)eventData;
+					mg_ws_send(conn, wm->data.ptr, wm->data.len, WEBSOCKET_OP_TEXT);
 				}
 			}
 
