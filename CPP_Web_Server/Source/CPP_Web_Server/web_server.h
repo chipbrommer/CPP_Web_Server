@@ -22,7 +22,6 @@
 #include <map>							// Maps
 #include "../Mongoose/mongoose.h"		// Mongoose functionality
 #include <thread>						// Threading
-#include <iostream>						// @todo remove
 //
 //	Defines:
 //          name                        reason defined
@@ -145,7 +144,7 @@ namespace Essentials
 			{
 				if (event == MG_EV_OPEN)
 				{
-					std::cout << "Opened!\n";
+					// Event "open" happened.
 				}
 				else if (event == MG_EV_HTTP_MSG)
 				{

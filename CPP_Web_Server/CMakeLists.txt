@@ -11,7 +11,7 @@ add_executable (
 	"Source/Mongoose/mongoose.c"
 )
 
-set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source/CPP_Web_Server/website")
+set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source/website")
 
 #Do linux/Unix related tasking 
 if (UNIX)
