@@ -1,10 +1,9 @@
-﻿# CMakeList.txt : CMake project for CPP_Websocket_Utility, include source and define
-# project specific logic here.
-#
+﻿# app name variable for ease of access 
+set(THIS_APP CPP_Web_Server)
 
 # Add source to this project's executable.
 add_executable (
-	CPP_Websocket_Utility 
+	${THIS_APP} 
 	"main.cpp"  
 	"Source/CPP_Web_Server/web_server.h" 
 	"Source/CPP_Web_Server/web_server.cpp" 
@@ -24,7 +23,7 @@ elseif(WIN32)
 endif()
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET CPP_Websocket_Utility PROPERTY CXX_STANDARD 20)
+  set_property(TARGET ${THIS_APP} PROPERTY CXX_STANDARD 20)
 endif()
 
 # TODO: Add tests and install targets if needed.
