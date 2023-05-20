@@ -22,5 +22,11 @@ int main()
 	{
 		std::cout << ws.GetLastError();
 	}
+
+	while (ws.IsRunning())
+	{
+		// do nothing
+	}
+
 	return 0;
 }

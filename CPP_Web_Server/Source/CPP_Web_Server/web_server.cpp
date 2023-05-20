@@ -36,6 +36,11 @@ namespace Essentials
 		{
 			Stop();
 			mg_mgr_free(&mManager);
+
+			if (mThread.joinable())
+			{
+				mThread.join();
+			}
 		}
 
 		void Web_Server::Configure(const std::string& address, const int16_t port, const std::string& root)
@@ -74,6 +79,17 @@ namespace Essentials
 			MG_INFO(("Web root         : [%s]", mRootDirectory.c_str()));
 
 			mRunning = true;
+
+			// Set class thread to run the server connection. 
+			mThread = std::thread(&Web_Server::Poll, this);
+
+			// Set the default thread priority until user decides to change
+#ifdef WIN32
+			SetServerThreadPriority(WebServerThreadPriority::NORMAL);
+#else
+			SetServerThreadPriority(0);
+#endif
+
 			return 0;
 		}
 
@@ -82,9 +98,75 @@ namespace Essentials
 			mRunning = false;
 		}
 
+		bool Web_Server::IsRunning()
+		{
+			return mRunning;
+		}
+
+#ifdef WIN32
+		int8_t Web_Server::SetServerThreadPriority(WebServerThreadPriority priority)
+		{
+			if (!SetThreadPriority(mThread.native_handle(), (int)priority)) 
+			{
+				mLastError = WebServerError::THREAD_PRIORITY_SET_FAILURE;
+				return -1;
+			}
+
+			return 0;
+		}
+#else
+		int8_t Web_Server::SetServerThreadPriority(int8_t priority)
+		{
+			int8_t minPriority = GetMinThreadPriorityValue();
+			int8_t maxPriority = GetMaxThreadPriorityValue();
+
+			if (priority < minPriority || priority > maxPriority)
+			{
+				mLastError = WebServerError::LINUX_THREAD_PRIORITY_OOR;
+				return -1;
+			}
+
+			int policy = 0;
+			sched_param schedule{};
+
+			if (pthread_getschedparam(mThread.native_handle(), &policy, &schedule) != 0)
+			{
+				mLastError = WebServerError::THREAD_PRIORITY_GET_FAILURE;
+				return -1;
+			}
+
+			if (pthread_setschedparam(mThread.native_handle(), policy, &schedule) != 0) 
+			{
+				mLastError = WebServerError::THREAD_PRIORITY_SET_FAILURE;
+				return -1;
+			}
+
+			return 0;
+		}
+
+		int8_t Web_Server::GetMinThreadPriorityValue()
+		{
+			return sched_get_priority_min(SCHED_OTHER);
+		}
+
+		int8_t Web_Server::GetMaxThreadPriorityValue()
+		{
+			return sched_get_priority_max(SCHED_OTHER);
+		}
+
+#endif
+
 		std::string Web_Server::GetLastError()
 		{
 			return WebServerErrorMap[mLastError];
+		}
+
+		void Web_Server::Poll()
+		{
+			while (mRunning)
+			{
+				mg_mgr_poll(&mManager, 100);
+			}
 		}
 
 		bool Web_Server::IsDataSet()
