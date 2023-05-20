@@ -13,14 +13,24 @@ add_executable (
 
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source/CPP_Web_Server/website")
 
+#Do linux/Unix related tasking 
 if (UNIX)
+    # handle website files
     set(DESTINATION_DIR "/mnt/c/website")
     execute_process(COMMAND "${CMAKE_COMMAND}" -E create_symlink "${SOURCE_DIR}" "${DESTINATION_DIR}")
+
+    # threading
+    find_package(Threads REQUIRED)
+    target_link_libraries(${THIS_APP} PRIVATE Threads::Threads)
+#else do windows related tasking
 elseif(WIN32)
+    # handle website files
     set(DESTINATION_DIR "C:/website")
     file(TO_NATIVE_PATH "${DESTINATION_DIR}" DST_DIR)
     file(TO_NATIVE_PATH "${SOURCE_DIR}" SRC_DIR)
     execute_process(COMMAND cmd.exe /c mklink /J "${DST_DIR}" "${SRC_DIR}")
+
+    # For Windows, threading library is linked automatically
 endif()
 
 # link libraries depending on the system architecture
