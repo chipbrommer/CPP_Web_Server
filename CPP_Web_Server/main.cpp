@@ -23,6 +23,12 @@ int main()
 		std::cout << ws.GetLastError();
 	}
 
+#ifdef WIN32
+	ws.SetServerThreadPriority(Essentials::Communications::WebServerThreadPriority::NORMAL);
+#else
+	ws.SetServerThreadPriority(0);
+#endif
+
 	while (ws.IsRunning())
 	{
 		// do nothing
