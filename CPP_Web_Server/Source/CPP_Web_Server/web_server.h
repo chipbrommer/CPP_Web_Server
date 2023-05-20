@@ -16,7 +16,7 @@
 #ifdef WIN32
 
 #else
-#include <sched.h>
+#include <sched.h>						// Thread scheduling
 #endif
 #include <string>						// Strings
 #include <map>							// Maps
@@ -36,13 +36,13 @@ namespace Essentials
 {
 	namespace Communications
 	{
-		static uint8_t WEB_SERVER_VERSION_MAJOR = 0;
-		static uint8_t WEB_SERVER_VERSION_MINOR = 1;
-		static uint8_t WEB_SERVER_VERSION_PATCH = 0;
-		static uint8_t WEB_SERVER_VERSION_BUILD = 0;
+		const static uint8_t WEB_SERVER_VERSION_MAJOR = 0;
+		const static uint8_t WEB_SERVER_VERSION_MINOR = 1;
+		const static uint8_t WEB_SERVER_VERSION_PATCH = 0;
+		const static uint8_t WEB_SERVER_VERSION_BUILD = 0;
 
 		/// @brief Printable string of the web server version
-		static std::string WebServerVersion = "Web Server v" +
+		const static std::string WebServerVersion = "Web Server v" +
 					std::to_string(WEB_SERVER_VERSION_MAJOR) + "." +
 					std::to_string(WEB_SERVER_VERSION_MINOR) + "." +
 					std::to_string(WEB_SERVER_VERSION_PATCH) + " - b" +
