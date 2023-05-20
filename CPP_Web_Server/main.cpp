@@ -9,7 +9,12 @@ int main()
 
 	std::string address = "http://0.0.0.0";
 	int16_t port = 8000;
+
+#ifdef WIN32
 	std::string root = "C:/website";
+#else
+	std::string root = "/mnt/c/website";
+#endif
 
 	ws.Configure(address, port, root);
 
