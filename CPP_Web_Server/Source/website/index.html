@@ -1,34 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>C++ Web Server Interface</title>
+    <link rel="stylesheet" href="pages/css/style.css">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 <body>
-    <h1>Websocket test client</h1>
-    <input id="url" type="text" placeholder="Type URL" value="ws://localhost:80/websocket" style="width:20em;" />
-    <button id="connect">connect</button>
-    <div style="height: 0.3em;">&nbsp;</div>
-    <input id="message" type="text" placeholder="Type message" style="width: 20em;" />
-    <button id="send">send message</button>
-    <div style="margin-top: 1em;">Event log:</div>
-    <div id="log" style="background: #eee; height: 10em; padding: 0.5em;" />
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bxl-c-plus-plus icon'></i>
+            <div class="logo_name">Web Server</div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <i class='bx bx-search'></i>
+                <input type="text" placeholder="Search...">
+                <span class="tooltip">Search</span>
+            </li>
+            <li>
+                <a href="#" class="sidebar-link" data-file="pages/dashboard.html" data-js="pages/js/dashboard.js">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Dashboard</span>
+                </a>
+                <span class="tooltip">Dashboard</span>
+            </li>
+            <li>
+                <a href="#" class="sidebar-link" data-file="pages/stats.html">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">Stats</span>
+                </a>
+                <span class="tooltip">Stats</span>
+            </li>
+            <li>
+                <a href="#" class="sidebar-link" data-file="pages/configure.html">
+                    <i class='bx bx-cog'></i>
+                    <span class="links_name">Configure</span>
+                </a>
+                <span class="tooltip">Configure</span>
+            </li>
+            <li>
+                <a href="#" class="sidebar-link" data-file="pages/upload.html">
+                    <i class='bx bx-folder'></i>
+                    <span class="links_name">Upload</span>
+                </a>
+                <span class="tooltip">Upload</span>
+            </li>
+        </ul>
+    </div>
+
+    <section class="main-content">
+        <div class="text">Dashboard</div>
+    </section>
+
+    <script src="pages/js/index.js"></script>
+    <script src="pages/js/dashboard.js"></script>
 </body>
 </html>
-<script>
-    var ws, E = function (id) { return document.getElementById(id); };
-    var url = E('url'), connect = E('connect'), message = E('message'), send = E('send'), log = E('log');
-    var enable = function (en) { message.disabled = send.disabled = !en; url.disabled = en; connect.innerHTML = en ? 'disconnect' : 'connect'; };
-    enable(false)
-    connect.onclick = function () {
-        if (ws) { ws.close(); return; }
-        ws = new WebSocket(url.value);
-        if (!ws) return;
-        ws.onopen = function () { log.innerHTML += 'CONNECTION OPENED<br/>'; }
-        ws.onmessage = function (ev) { log.innerHTML += 'RECEIVED: ' + ev.data + '<br/>'; }
-        ws.onerror = function (ev) { log.innerHTML += 'ERROR: ' + ev + '<br/>'; }
-        ws.onclose = function () { log.innerHTML += 'CONNECTION CLOSED<br/>'; enable(false); ws = null; }
-        enable(true);
-    };
-    send.onclick = function () {
-        if (!ws) return;
-        log.innerHTML += 'SENT: ' + message.value + '<br/>';
-        ws.send(message.value);
-    }
-</script>
