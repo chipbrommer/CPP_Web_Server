@@ -101,6 +101,12 @@ namespace Essentials
 			/// @brief Default constructor
 			Web_Server();
 
+			/// @brief Constructor that takes default parameters
+			/// @param address - Address to spawn the server on 
+			/// @param port - Port to spawn the server on
+			/// @param root - Root directory of the web files
+			Web_Server(const std::string& address, const int16_t port, const std::string& root);
+
 			/// @brief Default deconstructor
 			~Web_Server();
 

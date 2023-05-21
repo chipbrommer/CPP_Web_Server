@@ -32,6 +32,18 @@ namespace Essentials
 			mConnection		= NULL;
 		}
 
+		Web_Server::Web_Server(const std::string& address, const int16_t port, const std::string& root)
+		{
+			mAddress		= address;
+			mPort			= port;
+			mRootDirectory	= root;
+			rootAddress		= root; // Forward the new address to the rootAddress static address holder.
+			mLastError		= WebServerError::NONE;
+			mRunning		= false;
+			mg_mgr_init(&mManager);
+			mConnection		= NULL;
+		}
+
 		Web_Server::~Web_Server()
 		{
 			Stop();
