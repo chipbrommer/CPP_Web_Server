@@ -70,4 +70,4 @@ function menuBtnChange() {
 }
 
 // Load dashboard content by default
-loadContent('pages/dashboard.html');
+loadContent('pages/dashboard.html', 'pages/js/dashboard.js');

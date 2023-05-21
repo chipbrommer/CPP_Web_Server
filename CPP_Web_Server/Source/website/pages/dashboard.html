@@ -6,19 +6,22 @@
     <title></title>
 </head>
 <body>
-    Dashboard
     <br />
-    <br/>
-    <div class="dashboard-conent">
+    <div class="page-header">Dashboard</div>
+    <br />
+    <div class="dashboard-content">
         <h5>Web Server - websocket test client</h5>
         <input id="url" type="text" placeholder="Type URL" value="ws://localhost:80/websocket" style="width:20em;" />
         <button id="connect">connect</button>
         <div style="height: 0.3em;">&nbsp;</div>
         <input id="message" type="text" placeholder="Type message" style="width: 20em;" />
         <button id="send">send message</button>
-        <div style="margin-top: 1em;">Event log:</div>
-        <div id="log" style="background: black; color: white; height: 20em; padding: 0.5em; overflow: auto; font-family: monospace; font-size: 12px;"></div>
+        <div style="margin-top: 1em;">Console:</div>
+        <div class="console" id="console"></div>
     </div>
     <script src="js/dashboard.js"></script>
 </body>
 </html>
+
+
+<!--      -->
