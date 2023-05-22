@@ -13,8 +13,18 @@ On the 'index.html' the 'connect' button sends the update request, and displays
 when the connection has been established. The user can then send messages
 to the server and get them echo'd back in real time. 
 
-Next functionality added will be parsing the websocket messages in the event
-handler and triggering c++ functions to execute. Giving a web UI interface
-to c++; 
+5/21/2022 - Weekly update
 
-Stay tuned, more to come. 
+This weekend I have added more web design for the front end, converted the testing page into a 
+nice dashboard style page and turned the log into a scrollable console style view. 
+
+I converted the class into a singleton style instance which unlocked the capability for the
+added functionality I have added. A user can now send messages or data to the website at their
+desire using the 'SendConsoleLog' function. 
+
+This functionality will be expanded upon in coming weeks to include ability for a user to publish
+function access to the webpage and to send json structures to be displayed as a form. 
+
+-------------
+
+Stay tuned, there is more to come as I build a user customizable web UI interface to a c++ program;
