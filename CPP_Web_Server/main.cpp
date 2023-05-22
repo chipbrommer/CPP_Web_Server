@@ -3,10 +3,6 @@
 
 int main()
 {
-	std::cout << "Hello CMake." << std::endl;
-
-	Essentials::Communications::Web_Server ws;
-
 	std::string address = "http://127.0.0.1";
 	int16_t port = 80;
 
@@ -16,22 +12,27 @@ int main()
 	std::string root = "/mnt/c/website";
 #endif
 
-	ws.Configure(address, port, root);
+	Essentials::Communications::Web_Server* ws = ws->GetInstance();
 
-	if (ws.Start() < 0)
+	ws->Configure(address, port, root);
+
+	if (ws->Start() < 0)
 	{
-		std::cout << ws.GetLastError();
+		std::cout << ws->GetLastError();
 	}
 
 #ifdef WIN32
-	ws.SetServerThreadPriority(Essentials::Communications::WebServerThreadPriority::NORMAL);
+	ws->SetServerThreadPriority(Essentials::Communications::WebServerThreadPriority::NORMAL);
 #else
-	ws.SetServerThreadPriority(0);
+	ws->SetServerThreadPriority(0);
 #endif
-
-	while (ws.IsRunning())
+	int count = 0;
+	while (ws->IsRunning())
 	{
-		// do nothing
+		count++;
+		ws->SendConsoleLog("Log: " + std::to_string(count));
+		
+		Sleep(2000);
 	}
 
 	return 0;

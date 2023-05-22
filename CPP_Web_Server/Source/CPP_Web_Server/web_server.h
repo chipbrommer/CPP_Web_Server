@@ -98,17 +98,18 @@ namespace Essentials
 		class Web_Server
 		{
 		public:
-			/// @brief Default constructor
-			Web_Server();
 
-			/// @brief Constructor that takes default parameters
-			/// @param address - Address to spawn the server on 
-			/// @param port - Port to spawn the server on
-			/// @param root - Root directory of the web files
-			Web_Server(const std::string& address, const int16_t port, const std::string& root);
+			//! @brief Prevent cloning.
+			Web_Server(Web_Server& other) = delete;
 
-			/// @brief Default deconstructor
-			~Web_Server();
+			//! @brief Prevent assigning
+			void operator=(const Web_Server&) = delete;
+
+			//! @brief Get current instance or creates a new one. 
+			static Web_Server* GetInstance();
+
+			//! @brief Release the instance
+			static void ReleaseInstance();
 
 			/// @brief Configure the Web Server client
 			/// @param address - [in] - Address to spawn the server on
@@ -139,8 +140,16 @@ namespace Essentials
 			/// @return String containing information on the last error
 			std::string GetLastError();
 
+			int SendConsoleLog(const std::string& message);
+
 		protected:
 		private:
+
+			/// @brief Hidden constructor
+			Web_Server();
+
+			/// @brief Hidden deconstructor
+			~Web_Server();
 
 			void Poll();
 
@@ -148,9 +157,15 @@ namespace Essentials
 
 			static void eventCallback(mg_connection* conn, int event, void* eventData, void* funcData)
 			{
+				Web_Server* server = static_cast<Web_Server*>(funcData);
+
 				if (event == MG_EV_OPEN)
 				{
 					// Event "open" happened.
+				}
+				else if (event == MG_EV_POLL)
+				{
+					// Do nothing - just a heartbeart
 				}
 				else if (event == MG_EV_HTTP_MSG)
 				{
@@ -160,11 +175,9 @@ namespace Essentials
 					{
 						// Upgrade to websocket..
 						mg_ws_upgrade(conn, hm, NULL);
-					}
-					else if (mg_http_match_uri(hm, "/rest"))
-					{
-						// Serve REST response
-						mg_http_reply(conn, 200, "", "{\"result\": %d}\n", 123);
+						Web_Server* ws = ws->GetInstance();
+						ws->mWebsocketConnetion = conn;
+						ws->mUpgraded = true;
 					}
 					else if (mg_http_match_uri(hm, "/hello"))
 					{
@@ -186,14 +199,17 @@ namespace Essentials
 				}
 			}
 
-			std::string		mAddress;				// Address to spawn the server on.
-			int16_t			mPort;					// Port to spawn the server on.
-			std::string		mRootDirectory;			// Root directory for the server files. 
-			WebServerError	mLastError;				// Last errror for web server class.
-			bool			mRunning;				// Bool if server is running. 
-			mg_mgr			mManager;				// Mongoose server manager.
-			mg_connection*  mConnection;			// Mongoose server connection.
-			std::thread		mThread;				// Thread for the server to run in.
+			std::string			mAddress;				// Address to spawn the server on.
+			int16_t				mPort;					// Port to spawn the server on.
+			std::string			mRootDirectory;			// Root directory for the server files. 
+			WebServerError		mLastError;				// Last errror for web server class.
+			bool				mRunning;				// Bool if server is running. 
+			mg_mgr				mManager;				// Mongoose server manager.
+			mg_connection*		mConnection;			// Mongoose server connection.
+			mg_connection*		mWebsocketConnetion;
+			std::thread			mThread;				// Thread for the server to run in.
+			bool				mUpgraded;
+			static Web_Server*	mInstance;				// Pointer to the instance
 		};
 
 	}	// end Communications
