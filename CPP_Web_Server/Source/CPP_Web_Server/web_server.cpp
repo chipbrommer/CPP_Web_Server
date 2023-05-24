@@ -177,6 +177,7 @@ namespace Essentials
 			mConnection = nullptr;
 			mWebsocketConnetion = nullptr;
 			mUpgraded = false;
+			mTerminal = new Essentials::Utilities::Terminal;
 		}
 
 		Web_Server::~Web_Server()
@@ -223,10 +224,11 @@ namespace Essentials
 			if (this->mWebsocketConnetion && this->mUpgraded)
 			{
 				mg_ws_send(this->mWebsocketConnetion, message.c_str(), message.size(), WEBSOCKET_OP_TEXT);
-				return 0; // Success
+				return 0;
 			}
 
-			return -1; // WebSocket connection not available or not upgraded
+			// WebSocket connection not available or not upgraded
+			return -1;
 		}
 	}
 }

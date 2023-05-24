@@ -16,12 +16,13 @@
 #ifdef WIN32
 
 #else
-#include <sched.h>						// Thread scheduling
+#include <sched.h>							// Thread scheduling
 #endif
-#include <string>						// Strings
-#include <map>							// Maps
-#include "../Mongoose/mongoose.h"		// Mongoose functionality
-#include <thread>						// Threading
+#include <string>							// Strings
+#include <map>								// Maps
+#include "../Mongoose/mongoose.h"			// Mongoose functionality
+#include <thread>							// Threading
+#include "../CPP_Terminal/cpp_terminal.h"	// Terminal access
 //
 //	Defines:
 //          name                        reason defined
@@ -175,9 +176,8 @@ namespace Essentials
 					{
 						// Upgrade to websocket..
 						mg_ws_upgrade(conn, hm, NULL);
-						Web_Server* ws = ws->GetInstance();
-						ws->mWebsocketConnetion = conn;
-						ws->mUpgraded = true;
+						server->mWebsocketConnetion = conn;
+						server->mUpgraded = true;
 					}
 					else if (mg_http_match_uri(hm, "/hello"))
 					{
@@ -193,9 +193,15 @@ namespace Essentials
 				}
 				else if (event == MG_EV_WS_MSG)
 				{
-					// Got websocket frame. Received data is wm->data. Echo it back!
 					mg_ws_message* wm = (mg_ws_message*)eventData;
-					mg_ws_send(conn, wm->data.ptr, wm->data.len, WEBSOCKET_OP_TEXT);
+					std::string data = wm->data.ptr;
+					std::string result;
+
+					if (server->mTerminal->ExecuteCommand(data, result) >= 0)
+					{
+						std::cout << result << std::endl;
+						server->SendConsoleLog(result);
+					}
 				}
 			}
 
@@ -210,6 +216,7 @@ namespace Essentials
 			std::thread			mThread;				// Thread for the server to run in.
 			bool				mUpgraded;
 			static Web_Server*	mInstance;				// Pointer to the instance
+			Essentials::Utilities::Terminal* mTerminal;
 		};
 
 	}	// end Communications
