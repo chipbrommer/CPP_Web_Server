@@ -18,13 +18,16 @@ to the server and get them echo'd back in real time.
 This weekend I have added more web design for the front end, converted the testing page into a 
 nice dashboard style page and turned the log into a scrollable console style view. 
 
-I converted the class into a singleton style instance which unlocked the capability for the
-added functionality I have added. A user can now send messages or data to the website at their
+![Untitled](https://github.com/chipbrommer/CPP_Web_Server/assets/34485606/34723ccd-a4bb-4966-818a-5cf5928bd612)
+
+I converted the class into a singleton which unlocked the capability for the
+added functionality I have added and for future expansion. A user can now send messages or data to the website at their
 desire using the 'SendConsoleLog' function. 
 
 This functionality will be expanded upon in coming weeks to include ability for a user to publish
-function access to the webpage and to send json structures to be displayed as a form. 
+function access to the webpage, to send json structures to be displayed as a form for program configs, and more.
 
 -------------
 
 Stay tuned, there is more to come as I build a user customizable web UI interface to a c++ program;
+
