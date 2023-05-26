@@ -1,4 +1,6 @@
 ﻿#include <iostream>
+#include "Source/CPP_Timer/cpp_timer.h"
+#include "Source/CPP_Logger/cpp_logger.h"
 #include "Source/CPP_Web_Server/web_server.h"
 
 int main()
@@ -26,13 +28,18 @@ int main()
 #else
 	ws->SetServerThreadPriority(0);
 #endif
+
 	int count = 0;
 	while (ws->IsRunning())
 	{
 		count++;
 		ws->SendConsoleLog("Log: " + std::to_string(count));
 		
+#ifdef WIN32
 		Sleep(2000);
+#else
+		sleep(2);
+#endif
 	}
 
 	return 0;

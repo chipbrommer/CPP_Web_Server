@@ -23,7 +23,7 @@ namespace Essentials
 	{
 		Terminal::Terminal()
 		{
-			mLastError = TerminalError::NONE;
+			mLastError	= TerminalError::NONE;
 		}
 
 		Terminal::~Terminal()
@@ -33,7 +33,7 @@ namespace Essentials
 
 		int8_t Terminal::ExecuteCommand(std::string& command, std::string& result)
 		{
-			char buffer[512] = { 0 };
+			char buffer[512] = {0};
 
 			FILE* pipe = popen(command.c_str(), "r");
 
@@ -42,10 +42,10 @@ namespace Essentials
 				mLastError = TerminalError::POPEN_FAILED;
 				return -1;
 			}
-			try
+			try 
 			{
-				int16_t bytesread;
-				while ((bytesread = (int16_t)std::fread(buffer, sizeof(buffer[0]), sizeof(buffer), pipe)) != 0)
+				size_t bytesread;
+				while ((bytesread = std::fread(buffer, sizeof(buffer[0]), sizeof(buffer), pipe)) != 0) 
 				{
 					result += std::string(buffer, bytesread);
 				}
@@ -65,7 +65,7 @@ namespace Essentials
 		std::string Terminal::ExecuteCommand(std::string& command)
 		{
 			std::string result;
-			if (ExecuteCommand(command, result) < 0)
+			if (ExecuteCommand(command,result) < 0)
 			{
 				return "";
 			}

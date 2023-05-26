@@ -68,23 +68,23 @@ namespace Essentials
 			std::string("Error Code " + std::to_string((uint8_t)TerminalError::EXCEPTION) + ": caught exception.")},
 		};
 
-		struct CommandResult
+		struct CommandResult 
 		{
 			std::string output;
 			int8_t		exitstatus;
 
-			friend std::ostream& operator<<(std::ostream& os, const CommandResult& result)
+			friend std::ostream& operator<<(std::ostream& os, const CommandResult& result) 
 			{
 				os << "command exitstatus: " << result.exitstatus << " output: " << result.output;
 				return os;
 			}
 
-			bool operator==(const CommandResult& rhs) const
+			bool operator==(const CommandResult& rhs) const 
 			{
 				return	output == rhs.output && exitstatus == rhs.exitstatus;
 			}
 
-			bool operator!=(const CommandResult& rhs) const
+			bool operator!=(const CommandResult& rhs) const 
 			{
 				return !(rhs == *this);
 			}
