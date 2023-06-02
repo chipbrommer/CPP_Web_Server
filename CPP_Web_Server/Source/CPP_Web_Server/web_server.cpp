@@ -177,7 +177,9 @@ namespace Essentials
 			mConnection = nullptr;
 			mWebsocketConnetion = nullptr;
 			mUpgraded = false;
+#ifdef CPP_TERMINAL
 			mTerminal = new Essentials::Utilities::Terminal;
+#endif
 		}
 
 		Web_Server::~Web_Server()

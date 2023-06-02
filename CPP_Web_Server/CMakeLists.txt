@@ -15,6 +15,7 @@ add_executable (
     "Source/CPP_Logger/cpp_logger.cpp"
 	"Source/Mongoose/mongoose.h"
 	"Source/Mongoose/mongoose.c"
+
 )
 
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source/website")

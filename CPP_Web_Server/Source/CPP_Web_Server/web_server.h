@@ -22,7 +22,9 @@
 #include <map>								// Maps
 #include "../Mongoose/mongoose.h"			// Mongoose functionality
 #include <thread>							// Threading
+#ifdef CPP_TERMINAL
 #include "../CPP_Terminal/cpp_terminal.h"	// Terminal access
+#endif
 //
 //	Defines:
 //          name                        reason defined
@@ -195,13 +197,16 @@ namespace Essentials
 				{
 					mg_ws_message* wm = (mg_ws_message*)eventData;
 					std::string data = wm->data.ptr;
+#ifdef CPP_TERMINAL
 					std::string result;
-
 					if (server->mTerminal->ExecuteCommand(data, result) >= 0)
 					{
 						std::cout << result << std::endl;
 						server->SendConsoleLog(result);
 					}
+#else
+					server->SendConsoleLog("NOTICE: Terminal access not enabled");
+#endif
 				}
 			}
 
@@ -216,7 +221,9 @@ namespace Essentials
 			std::thread			mThread;				// Thread for the server to run in.
 			bool				mUpgraded;
 			static Web_Server*	mInstance;				// Pointer to the instance
+#ifdef CPP_TERMINAL
 			Essentials::Utilities::Terminal* mTerminal;	
+#endif
 		};
 
 	}	// end Communications
