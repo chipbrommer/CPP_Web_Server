@@ -14,7 +14,11 @@ int main()
 	std::string root = "/mnt/c/website";
 #endif
 
-	Essentials::Communications::Web_Server* ws = ws->GetInstance();
+	Essentials::Communications::Web_Server* ws		= ws->GetInstance();
+	Essentials::Utilities::Timer*			timer	= timer->GetInstance();
+	Essentials::Utilities::Log*				log		= log->GetInstance();
+
+	log->Initialize(true, true/*, "C:/AppData/ChipB/log_tester.txt"*/);
 
 	ws->Configure(address, port, root);
 
@@ -25,22 +29,23 @@ int main()
 
 #ifdef WIN32
 	ws->SetServerThreadPriority(Essentials::Communications::WebServerThreadPriority::NORMAL);
+	//log->SetLoggerThreadPriority(Essentials::Utilities::LogThreadPriority::LOWEST);
 #else
 	ws->SetServerThreadPriority(0);
+	//log->SetLoggerThreadPriority(0);
 #endif
+
+	log->AddEntry(Essentials::Utilities::LOG_LEVEL::LOG_INFO, "Main", "Initialized!");
 
 	int count = 0;
 	while (ws->IsRunning())
 	{
 		count++;
 		ws->SendConsoleLog("Log: " + std::to_string(count));
-		
-#ifdef WIN32
-		Sleep(2000);
-#else
-		sleep(2);
-#endif
+		timer->MSecSleep(500);
 	}
+
+	log->AddEntry(Essentials::Utilities::LOG_LEVEL::LOG_INFO, "Main", "Closing!");
 
 	return 0;
 }

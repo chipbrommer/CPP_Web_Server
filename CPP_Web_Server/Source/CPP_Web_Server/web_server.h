@@ -172,7 +172,7 @@ namespace Essentials
 				{
 					mg_http_message* hm = (mg_http_message*)eventData;
 
-					if (mg_http_match_uri(hm, "/websocket"))
+					if (mg_http_match_uri(hm, "/ws"))
 					{
 						// Upgrade to websocket..
 						mg_ws_upgrade(conn, hm, NULL);
@@ -216,10 +216,10 @@ namespace Essentials
 			std::thread			mThread;				// Thread for the server to run in.
 			bool				mUpgraded;
 			static Web_Server*	mInstance;				// Pointer to the instance
-			Essentials::Utilities::Terminal* mTerminal;
+			Essentials::Utilities::Terminal* mTerminal;	
 		};
 
 	}	// end Communications
 }	// end Essentials
 
-#endif // CPP_WEB_SERVER+
+#endif // CPP_WEB_SERVER

@@ -23,6 +23,7 @@
 #include	<sys/types.h>
 #include	<sys/stat.h>
 #include	<unistd.h>
+#include	<string.h>
 #endif
 //
 #include	<string>                    // Strings
@@ -44,7 +45,9 @@
 //
 #if defined CPP_TIMER
 #include "../CPP_Timer/cpp_timer.h"
-#elif !defined CPP_TIMER && !defined OLD_TIMER
+#elif defined C_TIMER
+#include "../Timer/timer.h"
+#else
 #define		NO_TIMER
 #endif
 //
@@ -74,6 +77,19 @@ namespace Essentials
 			LOG_MSEC,
 			LOG_USEC,
 		};
+
+#ifdef WIN32
+		enum class LogThreadPriority
+		{
+			IDLE			= THREAD_PRIORITY_IDLE,
+			LOWEST			= THREAD_PRIORITY_LOWEST,
+			BELOW_NORMAL	= THREAD_PRIORITY_BELOW_NORMAL,
+			NORMAL			= THREAD_PRIORITY_NORMAL,
+			ABOVE_NORMAL	= THREAD_PRIORITY_ABOVE_NORMAL,
+			HIGH			= THREAD_PRIORITY_HIGHEST,
+			TIME_CRITICAL	= THREAD_PRIORITY_TIME_CRITICAL,
+		};
+#endif
 
 		// A Map to convert an logging level value to a readable string.
 		static std::map<LOG_LEVEL, std::string> LevelMap
@@ -109,11 +125,11 @@ namespace Essentials
 			static void ReleaseInstance();
 
 			//! @brief Starts the logging thread
-			//! @param filename - File name and path to place the output file
 			//! @param enableConsoleLogging - true by default, enables or disables console logging. 
 			//! @param enableFileLogging - true by default, enables or disables file logging.
+			//! @param filename -  true by default, required if enableFileLogging is true. File name AND path to place the output file.
 			//! @return -1 on fail, 0 if already initialized, 1 if successful
-			int	Initialize(std::string filename, bool enableConsoleLogging = true, bool enableFileLogging = true);
+			int	Initialize(bool enableConsoleLogging = true, bool enableFileLogging = true, std::string filename = "");
 
 			//! @brief Adds a message into the queue to be logged
 			//! @param level - Log level of the string.
@@ -150,6 +166,14 @@ namespace Essentials
 			//! @param enabled - enable logging to file ?
 			//! @return false if failed, true if set
 			bool LogToFile(bool enable);
+
+#ifdef WIN32
+			int8_t SetLoggerThreadPriority(LogThreadPriority priority);
+#else
+			int8_t SetServerThreadPriority(int8_t priority);
+			int8_t GetMinThreadPriorityValue();
+			int8_t GetMaxThreadPriorityValue();
+#endif
 
 		protected:
 		private:
