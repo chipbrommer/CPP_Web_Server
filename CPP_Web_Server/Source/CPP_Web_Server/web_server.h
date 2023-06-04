@@ -22,8 +22,13 @@
 #include <map>								// Maps
 #include "../Mongoose/mongoose.h"			// Mongoose functionality
 #include <thread>							// Threading
+
 #ifdef CPP_TERMINAL
 #include "../CPP_Terminal/cpp_terminal.h"	// Terminal access
+#endif
+
+#ifdef CPP_LOGGER
+#include "../CPP_Logger/cpp_logger.h"		// Logger access
 #endif
 //
 //	Defines:
@@ -221,8 +226,13 @@ namespace Essentials
 			std::thread			mThread;				// Thread for the server to run in.
 			bool				mUpgraded;
 			static Web_Server*	mInstance;				// Pointer to the instance
+
 #ifdef CPP_TERMINAL
 			Essentials::Utilities::Terminal* mTerminal;	
+#endif
+
+#ifdef CPP_LOGGER
+			Essentials::Utilities::Log* mLog;
 #endif
 		};
 

@@ -10,13 +10,19 @@
 //! @date		< 1 / 12 / 2022 > Initial Start Date
 //!
 /*****************************************************************************/
-#pragma once
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Includes:
 //          name                        reason included
 //          --------------------        ---------------------------------------
 #include	"cpp_timer.h"					// Timer class header
+//
+//  Defines:
+#ifdef linux
+#define printf_s printf
+#define fprintf_s fprintf
+#endif
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -63,7 +69,7 @@ namespace Essentials
 				Initialize();
 			}
 
-#ifdef _WIN32
+#ifdef WIN32
 			now = mTickCount;
 #else
 			{
@@ -77,7 +83,7 @@ namespace Essentials
 
 					if (elapsed < 0)
 					{
-						tickOffset += elapsed;
+						mTickOffset += elapsed;
 #ifdef USE_STDIO
 						printf("System time went backwards %d msec\n", -elapsed);
 #else
@@ -106,7 +112,7 @@ namespace Essentials
 				int time = GetMSecTicks();
 			}
 
-#if defined _WIN32
+#if defined WIN32
 			LARGE_INTEGER currentCount;
 			QueryPerformanceCounter(&currentCount);
 			return (uint32_t)((uint64_t)((((uint64_t)currentCount.QuadPart - mUSecStartTime) * mTimerFactor + 0.5)) & 0xffffffff);
@@ -114,14 +120,14 @@ namespace Essentials
 			struct timeval tv;
 			gettimeofday(&tv, NULL);
 
-			unit64_t uSecs = tv.tv_sec * 1000000 + tv.tv_usec;
+			uint64_t uSecs = tv.tv_sec * 1000000 + tv.tv_usec;
 			return (uSecs & 0xffffffff);
 #endif
 		}
 
 		void Timer::MSecSleep(const uint32_t mSecs)
 		{
-#ifdef _WIN32
+#ifdef WIN32
 			Sleep(mSecs);
 #else
 			usleep(mSecs * 1000);
@@ -130,7 +136,7 @@ namespace Essentials
 
 		void Timer::USecSleep(const uint32_t uSecs)
 		{
-#ifdef _WIN32
+#ifdef WIN32
 			Sleep(uSecs / 1000);
 #else
 			usleep(uSecs);
@@ -176,7 +182,7 @@ namespace Essentials
 
 			this->mUser = "Timer";
 
-#ifdef _WIN32
+#ifdef WIN32
 			LARGE_INTEGER hrInfo = { 0 };
 			LARGE_INTEGER curCount = { 0 };
 
@@ -188,9 +194,7 @@ namespace Essentials
 
 			mTimerFactor = 1000000.0 / hrInfo.QuadPart;
 			mUSecStartTime = (uint64_t)curCount.QuadPart;
-#else
 
-#endif
 			mThread = new std::thread(&Timer::HandleTrueMSec, this);
 
 			// Verify thread initialization
@@ -216,7 +220,8 @@ namespace Essentials
 			{
 				MSecSleep(1);
 			}
-
+#endif
+			
 			mInitialzied = true;
 
 #ifdef USE_STDIO
@@ -229,7 +234,7 @@ namespace Essentials
 
 		int Timer::HandleTrueMSec()
 		{
-#ifdef _WIN32
+#ifdef WIN32
 			HANDLE eventHandle;
 			MMRESULT timer;
 

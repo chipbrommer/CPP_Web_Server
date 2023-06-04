@@ -16,7 +16,7 @@
 //  Includes:
 //          name                        reason included
 //          --------------------        ---------------------------------------
-#if defined _WIN32
+#if defined WIN32
 #include	<windows.h>					// Windows necessary stuff
 #include	<direct.h>					// Make Directory
 #else

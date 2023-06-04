@@ -177,8 +177,13 @@ namespace Essentials
 			mConnection = nullptr;
 			mWebsocketConnetion = nullptr;
 			mUpgraded = false;
+
 #ifdef CPP_TERMINAL
 			mTerminal = new Essentials::Utilities::Terminal;
+#endif
+
+#ifdef CPP_LOGGER
+			mLog = Essentials::Utilities::Log::GetInstance();
 #endif
 		}
 

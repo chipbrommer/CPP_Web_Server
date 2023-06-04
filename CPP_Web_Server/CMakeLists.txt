@@ -5,14 +5,14 @@ set(THIS_APP CPP_Web_Server)
 add_executable (
 	${THIS_APP} 
 	"main.cpp"  
-	"Source/CPP_Web_Server/web_server.h" 
-	"Source/CPP_Web_Server/web_server.cpp" 
     "Source/CPP_Terminal/cpp_terminal.h"
     "Source/CPP_Terminal/cpp_terminal.cpp"
     "Source/CPP_Timer/cpp_timer.h"
     "Source/CPP_Timer/cpp_timer.cpp"
     "Source/CPP_Logger/cpp_logger.h"
     "Source/CPP_Logger/cpp_logger.cpp"
+    "Source/CPP_Web_Server/web_server.h" 
+	"Source/CPP_Web_Server/web_server.cpp" 
 	"Source/Mongoose/mongoose.h"
 	"Source/Mongoose/mongoose.c"
 

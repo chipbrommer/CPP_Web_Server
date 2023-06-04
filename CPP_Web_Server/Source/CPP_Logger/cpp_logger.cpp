@@ -17,6 +17,12 @@
 //          --------------------        ---------------------------------------
 #include	"cpp_logger.h"						// Log Class
 //
+//  Defines:
+#ifdef linux
+#define printf_s printf
+#define fprintf_s fprintf
+#endif
+//
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace Essentials
@@ -87,7 +93,7 @@ namespace Essentials
 				if (stat(directoryPath.c_str(), &st) == -1)
 				{
 					int made = 0;
-#ifdef _WIN32
+#ifdef WIN32
 					made = _mkdir(directoryPath.c_str());
 #else
 					made = mkdir(directoryPath.c_str(), 0777);
@@ -95,7 +101,11 @@ namespace Essentials
 					if (made == -1)
 					{
 						char buffer[256];
+#ifdef WIN32
 						strerror_s(buffer, sizeof(buffer), errno); // get string message from errno, XSI-compliant version
+#else
+						strerror_r(errno, buffer, sizeof(buffer)); // get string message from errno, XSI-compliant version
+#endif
 						printf_s("Error %s\n", buffer);
 					}
 				}
@@ -104,8 +114,12 @@ namespace Essentials
 				auto now = std::chrono::system_clock::now();
 				char time_str[] = "yyy.mm.dd.HH-MM.SS.fff";
 				time_t ttime_t = std::chrono::system_clock::to_time_t(now);
-				std::tm ttm = { 0 };
+				tm ttm = { 0 };
+#ifdef WIN32
 				localtime_s(&ttm, &ttime_t);
+#else
+				localtime_r(&ttime_t, &ttm);
+#endif
 				strftime(time_str, strlen(time_str), "%Y.%m.%d-%H.%M.%S", &ttm);
 				std::chrono::system_clock::time_point tp_sec = std::chrono::system_clock::from_time_t(ttime_t);
 				int64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(now - tp_sec).count();
@@ -137,10 +151,10 @@ namespace Essentials
 #elif defined C_TIMER
 			AddEntry(LOG_LEVEL::LOG_INFO, mUser, "Initialize Complete - Using C_TIMER.");
 #endif
-			std::string logString = enableFileLogging ? LevelMap[mMaxFileLogLevel].c_str() : "Not Enabled!";
-			AddEntry(LOG_LEVEL::LOG_INFO, mUser, "File Log Level:    %s", logString);
-			logString = enableConsoleLogging ? LevelMap[mMaxConsoleLogLevel].c_str() : "Not Enabled!";
-			AddEntry(LOG_LEVEL::LOG_INFO, mUser, "Console Log Level: %s", logString);
+			std::string logString = enableFileLogging ? LevelMap[mMaxFileLogLevel] : "Not Enabled!";
+			AddEntry(LOG_LEVEL::LOG_INFO, mUser, "File Log Level:    %s", logString.c_str());
+			logString = enableConsoleLogging ? LevelMap[mMaxConsoleLogLevel] : "Not Enabled!";
+			AddEntry(LOG_LEVEL::LOG_INFO, mUser, "Console Log Level: %s", logString.c_str());
 			AddEntry(LOG_LEVEL::LOG_INFO, mUser, "Time Type:         %s", TimeMap[mTimestampLevel].c_str());
 
 			return 1;
@@ -181,7 +195,7 @@ namespace Essentials
 #endif
 			default:
 			{
-#ifdef _WIN32
+#ifdef WIN32
 				strcpy_s(ts, sizeof(ts), "");
 #else
 				strcpy(ts, "");
@@ -191,7 +205,7 @@ namespace Essentials
 
 			// Format the message with args
 			va_start(args, format);
-#ifdef _WIN32
+#ifdef WIN32
 			vsnprintf_s(msg, sizeof(msg), MAX_LOG_MESSAGE_LENGTH, format.c_str(), args);
 #else
 			vsnprintf(msg, MAX_LOG_MESSAGE_LENGTH, format.c_str(), args);
@@ -202,13 +216,13 @@ namespace Essentials
 			// Log to console if enabled and within the max
 			if (mConsoleOutputEnabled && level <= mMaxConsoleLogLevel)
 			{
-#ifdef _WIN32
+#ifdef WIN32
 				char buf[400];
 				snprintf(buf, sizeof(buf), "%s - %s - %s\n", ts, user.c_str(), msg);
 				OutputDebugStringA(buf);    // goes to the debug console
 				printf_s("%s", buf);
 #else
-				printf("%s - %s - %s\n", ts, user, msg);
+				printf("%s - %s - %s\n", ts, user.c_str(), msg);
 #endif
 			}
 
@@ -251,7 +265,7 @@ namespace Essentials
 				}
 
 #if defined NO_TIMER
-#ifdef _WIN32
+#ifdef WIN32
 				Sleep(1);
 #else
 				usleep(1000);

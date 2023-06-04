@@ -1,7 +1,7 @@
 ﻿#include <iostream>
-#include "Source/CPP_Terminal/cpp_terminal.h"
 #include "Source/CPP_Timer/cpp_timer.h"
 #include "Source/CPP_Logger/cpp_logger.h"
+#include "Source/CPP_Terminal/cpp_terminal.h"
 #include "Source/CPP_Web_Server/web_server.h"
 
 int main()
@@ -15,11 +15,11 @@ int main()
 	std::string root = "/mnt/c/website";
 #endif
 
-	Essentials::Communications::Web_Server* ws		= ws->GetInstance();
 	Essentials::Utilities::Timer*			timer	= timer->GetInstance();
 	Essentials::Utilities::Log*				log		= log->GetInstance();
+	Essentials::Communications::Web_Server* ws		= ws->GetInstance();
 
-	log->Initialize(true, true/*, "C:/AppData/ChipB/log_tester.txt"*/);
+	log->Initialize(true, true, "C:/AppData/Developement/log_tester.txt");
 
 	ws->Configure(address, port, root);
 
