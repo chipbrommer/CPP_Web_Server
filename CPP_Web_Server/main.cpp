@@ -19,7 +19,11 @@ int main()
 	Essentials::Utilities::Log*				log		= log->GetInstance();
 	Essentials::Communications::Web_Server* ws		= ws->GetInstance();
 
+#ifdef WIN32
 	log->Initialize(true, true, "C:/AppData/Developement/log_tester.txt");
+#else
+	log->Initialize(true, true, "/mnt/c/AppData/Developement/log_tester.txt");
+#endif
 
 	ws->Configure(address, port, root);
 

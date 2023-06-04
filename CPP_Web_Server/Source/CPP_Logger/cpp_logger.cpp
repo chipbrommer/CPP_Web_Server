@@ -162,7 +162,7 @@ namespace Essentials
 
 		bool Log::AddEntry(LOG_LEVEL level, std::string user, std::string format, ...)
 		{
-			va_list args;
+			va_list args{};
 			char msg[MAX_LOG_MESSAGE_LENGTH + 1];
 			char ts[20];
 
