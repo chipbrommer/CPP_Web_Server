@@ -78,9 +78,9 @@ namespace Essentials
 			LOG_USEC,
 		};
 
-#ifdef WIN32
 		enum class LogThreadPriority
 		{
+#ifdef WIN32
 			IDLE			= THREAD_PRIORITY_IDLE,
 			LOWEST			= THREAD_PRIORITY_LOWEST,
 			BELOW_NORMAL	= THREAD_PRIORITY_BELOW_NORMAL,
@@ -88,8 +88,16 @@ namespace Essentials
 			ABOVE_NORMAL	= THREAD_PRIORITY_ABOVE_NORMAL,
 			HIGH			= THREAD_PRIORITY_HIGHEST,
 			TIME_CRITICAL	= THREAD_PRIORITY_TIME_CRITICAL,
-		};
+#else
+			IDLE			= 1,
+			LOWEST			= 20,
+			BELOW_NORMAL	= 40,
+			NORMAL			= 0,
+			ABOVE_NORMAL	= 60,
+			HIGH			= 80,
+			TIME_CRITICAL	= 99,
 #endif
+		};
 
 		// A Map to convert an logging level value to a readable string.
 		static std::map<LOG_LEVEL, std::string> LevelMap
@@ -170,7 +178,7 @@ namespace Essentials
 #ifdef WIN32
 			int8_t SetLoggerThreadPriority(LogThreadPriority priority);
 #else
-			int8_t SetServerThreadPriority(int8_t priority);
+			int8_t SetLoggerThreadPriority(LogThreadPriority priority);
 			int8_t GetMinThreadPriorityValue();
 			int8_t GetMaxThreadPriorityValue();
 #endif

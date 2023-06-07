@@ -320,23 +320,25 @@ namespace Essentials
 			return 0;
 		}
 #else
-		int8_t Log::SetServerThreadPriority(int8_t priority)
+		int8_t Log::SetLoggerThreadPriority(LogThreadPriority priority)
 		{
 			int8_t minPriority = GetMinThreadPriorityValue();
 			int8_t maxPriority = GetMaxThreadPriorityValue();
 
-			if (priority < minPriority || priority > maxPriority)
+			if ((uint8_t)priority < minPriority || (uint8_t)priority > maxPriority)
 			{
 				return -1;
 			}
 
-			int policy = 0;
+			int policy = SCHED_OTHER;
 			sched_param schedule{};
 
 			if (pthread_getschedparam(mThread->native_handle(), &policy, &schedule) != 0)
 			{
 				return -1;
 			}
+
+			schedule.sched_priority = (uint8_t)priority;
 
 			if (pthread_setschedparam(mThread->native_handle(), policy, &schedule) != 0)
 			{

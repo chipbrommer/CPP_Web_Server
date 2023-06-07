@@ -90,7 +90,7 @@ namespace Essentials
 #ifdef WIN32
 			SetServerThreadPriority(WebServerThreadPriority::NORMAL);
 #else
-			SetServerThreadPriority(0);
+			SetServerThreadPriority(WebServerThreadPriority::NORMAL);
 #endif
 
 			return 0;
@@ -106,47 +106,42 @@ namespace Essentials
 			return mRunning;
 		}
 
-#ifdef WIN32
 		int8_t Web_Server::SetServerThreadPriority(WebServerThreadPriority priority)
 		{
-			if (!SetThreadPriority(mThread.native_handle(), (int)priority)) 
+#ifdef WIN32
+			if (!SetThreadPriority(mThread.native_handle(), (int)priority))
 			{
 				mLastError = WebServerError::THREAD_PRIORITY_SET_FAILURE;
 				return -1;
 			}
-
-			return 0;
-		}
 #else
-		int8_t Web_Server::SetServerThreadPriority(int8_t priority)
-		{
 			int8_t minPriority = GetMinThreadPriorityValue();
 			int8_t maxPriority = GetMaxThreadPriorityValue();
 
-			if (priority < minPriority || priority > maxPriority)
+			if ((uint8_t)priority < minPriority || (uint8_t)priority > maxPriority)
 			{
-				mLastError = WebServerError::LINUX_THREAD_PRIORITY_OOR;
 				return -1;
 			}
 
-			int policy = 0;
+			int policy = SCHED_OTHER;
 			sched_param schedule{};
 
 			if (pthread_getschedparam(mThread.native_handle(), &policy, &schedule) != 0)
 			{
-				mLastError = WebServerError::THREAD_PRIORITY_GET_FAILURE;
 				return -1;
 			}
 
-			if (pthread_setschedparam(mThread.native_handle(), policy, &schedule) != 0) 
+			schedule.sched_priority = (uint8_t)priority;
+
+			if (pthread_setschedparam(mThread.native_handle(), policy, &schedule) != 0)
 			{
-				mLastError = WebServerError::THREAD_PRIORITY_SET_FAILURE;
 				return -1;
 			}
-
+#endif
 			return 0;
 		}
 
+#ifndef WIN32
 		int8_t Web_Server::GetMinThreadPriorityValue()
 		{
 			return sched_get_priority_min(SCHED_OTHER);
@@ -156,7 +151,6 @@ namespace Essentials
 		{
 			return sched_get_priority_max(SCHED_OTHER);
 		}
-
 #endif
 
 		std::string Web_Server::GetLastError()
@@ -226,7 +220,7 @@ namespace Essentials
 			return true;
 		}
 
-		int Web_Server::SendConsoleLog(const std::string& message)
+		int8_t Web_Server::SendConsoleLog(const std::string& message)
 		{
 			if (this->mWebsocketConnetion && this->mUpgraded)
 			{

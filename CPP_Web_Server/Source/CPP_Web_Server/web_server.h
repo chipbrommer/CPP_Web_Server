@@ -13,9 +13,7 @@
 //  Includes:
 //          name                        reason included
 //          --------------------        ---------------------------------------
-#ifdef WIN32
-
-#else
+#ifdef __linux__
 #include <sched.h>							// Thread scheduling
 #endif
 #include <string>							// Strings
@@ -89,18 +87,26 @@ namespace Essentials
 			std::string("Error Code " + std::to_string((uint8_t)WebServerError::THREAD_PRIORITY_SET_FAILURE) + ": Failed to set thread priority.")},
 		};
 
-#ifdef WIN32
 		enum class WebServerThreadPriority
 		{
-			IDLE			= THREAD_PRIORITY_IDLE,
-			LOWEST			= THREAD_PRIORITY_LOWEST,
-			BELOW_NORMAL	= THREAD_PRIORITY_BELOW_NORMAL,
-			NORMAL			= THREAD_PRIORITY_NORMAL,
-			ABOVE_NORMAL	= THREAD_PRIORITY_ABOVE_NORMAL,
-			HIGH			= THREAD_PRIORITY_HIGHEST,
-			TIME_CRITICAL	= THREAD_PRIORITY_TIME_CRITICAL,
+//#ifdef WIN32
+//			IDLE			= THREAD_PRIORITY_IDLE,
+//			LOWEST			= THREAD_PRIORITY_LOWEST,
+//			BELOW_NORMAL	= THREAD_PRIORITY_BELOW_NORMAL,
+//			NORMAL			= THREAD_PRIORITY_NORMAL,
+//			ABOVE_NORMAL	= THREAD_PRIORITY_ABOVE_NORMAL,
+//			HIGH			= THREAD_PRIORITY_HIGHEST,
+//			TIME_CRITICAL	= THREAD_PRIORITY_TIME_CRITICAL
+//#else
+			IDLE			= 1,
+			LOWEST			= 20,
+			BELOW_NORMAL	= 40,
+			NORMAL			= 0,
+			ABOVE_NORMAL	= 60,
+			HIGH			= 80,
+			TIME_CRITICAL	= 99,
+//#endif
 		};
-#endif
 
 		/// @brief Web server class
 		class Web_Server
@@ -136,11 +142,18 @@ namespace Essentials
 			/// @return true if running, false if not.
 			bool IsRunning();
 
-#ifdef WIN32
+			/// @brief Set the server thread priority
+			/// @param priority - WebServerThreadPriority enum for thread priority level
+			/// @return -1 on error, 0 on success. 
 			int8_t SetServerThreadPriority(WebServerThreadPriority priority);
-#else
-			int8_t SetServerThreadPriority(int8_t priority);
+
+#ifndef WIN32
+			/// @brief Get the minimum thread priority value for unix.
+			/// @return the value of the minimum priority. 
 			int8_t GetMinThreadPriorityValue();
+
+			/// @brief Get the maximum thread priority value for unix.
+			/// @return the value of the maximum priority. 
 			int8_t GetMaxThreadPriorityValue();
 #endif
 
@@ -148,7 +161,10 @@ namespace Essentials
 			/// @return String containing information on the last error
 			std::string GetLastError();
 
-			int SendConsoleLog(const std::string& message);
+			/// @brief Send a console log message to the websocket. 
+			/// @param message - [in] - message to be published.
+			/// @return -1 on error, 0 on success
+			int8_t SendConsoleLog(const std::string& message);
 
 		protected:
 		private:
@@ -159,10 +175,18 @@ namespace Essentials
 			/// @brief Hidden deconstructor
 			~Web_Server();
 
+			/// @brief Blocking function that runs a while loop to poll the web server. 
 			void Poll();
 
+			/// @brief Getter to check if all necessary data is set (address, port, and root directory)
+			/// @return true or false appropriately. 
 			bool IsDataSet();
 
+			/// @brief Event callback for the web server. 
+			/// @param conn Mongoose connection
+			/// @param event - [in] - event that is happening
+			/// @param eventData - [in] - data for the event happening. 
+			/// @param funcData - [in] - additional data. 
 			static void eventCallback(mg_connection* conn, int event, void* eventData, void* funcData)
 			{
 				Web_Server* server = static_cast<Web_Server*>(funcData);
@@ -222,10 +246,11 @@ namespace Essentials
 			bool				mRunning;				// Bool if server is running. 
 			mg_mgr				mManager;				// Mongoose server manager.
 			mg_connection*		mConnection;			// Mongoose server connection.
-			mg_connection*		mWebsocketConnetion;
+			mg_connection*		mWebsocketConnetion;	// Holds Mongoose websocket connection after its upgraded
 			std::thread			mThread;				// Thread for the server to run in.
-			bool				mUpgraded;
+			bool				mUpgraded;				// flag for if the websocket has been upgraded. 
 			static Web_Server*	mInstance;				// Pointer to the instance
+			WebServerThreadPriority mThreadPriority;	// Thread priority for windows. 
 
 #ifdef CPP_TERMINAL
 			Essentials::Utilities::Terminal* mTerminal;	
