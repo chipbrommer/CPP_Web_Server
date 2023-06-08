@@ -11,11 +11,11 @@ add_executable (
     "Source/CPP_Timer/cpp_timer.cpp"
     "Source/CPP_Logger/cpp_logger.h"
     "Source/CPP_Logger/cpp_logger.cpp"
+    "Source/CPP_Web_Server/publishable_types.h"
     "Source/CPP_Web_Server/web_server.h" 
 	"Source/CPP_Web_Server/web_server.cpp" 
 	"Source/Mongoose/mongoose.h"
 	"Source/Mongoose/mongoose.c"
-
 )
 
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source/website")
