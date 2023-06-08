@@ -1,3 +1,22 @@
+///////////////////////////////////////////////////////////////////////////////
+//!
+//! @file       publishable_types.h
+//! 
+//! @brief      Definitions for types publishable to the webserver class. 
+//! 
+//! @author     Chip Brommer
+//!
+///////////////////////////////////////////////////////////////////////////////
+#pragma once
+///////////////////////////////////////////////////////////////////////////////
+//
+//    Defines:
+//          name                        reason defined
+//          --------------------        ---------------------------------------
+#ifndef     CPP_PUBLISHABLE_TYPES       // Define the header file
+#define     CPP_PUBLISHABLE_TYPES
+//
+///////////////////////////////////////////////////////////////////////////////
 
 namespace Essentials
 {
@@ -22,7 +41,7 @@ namespace Essentials
                 BOOL,
             };
 
-            std::map<Type, std::string> TypeMap
+            static std::map<Type, std::string> TypeMap
             {
                 {Type::NONE,    std::string("none")},
                 {Type::CHAR,    std::string("char")},
@@ -65,7 +84,7 @@ namespace Essentials
                 BAR,
             };
 
-            std::map<Type, std::string> TypeMap
+            static std::map<Type, std::string> TypeMap
             {
                 {Type::NONE,   std::string("none")},
                 {Type::LINE,   std::string("line")},
@@ -76,42 +95,45 @@ namespace Essentials
 #pragma pack(push,1)
         struct PublishedGraphData
         {
-            void* address;
-            std::string unique_name;
-            std::string description;
-            Data::Type type;
-            Data::Access access;
-            std::string graph_name;
-            Graph::GraphType graph_type;
-            int graph_size;
+            void*           address;
+            std::string     unique_name;
+            std::string     description;
+            Data::Type      type;
+            Data::Access    access;
+            std::string     graph_name;
+            Graph::Type     graph_type;
+            int             graph_size;
 
             PublishedGraphData()
             {
-
+                address     = nullptr;
+                unique_name = "";
+                description = "";
+                type        = Data::Type::NONE;
+                access      = Data::Access::VIEW;
+                graph_name  = "";
+                graph_type  = Graph::Type::NONE;
+                graph_size  = 0;
             }
 
-            PublishedGraphData(void* new_address, std::string name, std::string new_description, Data::Type new_type, std::string new_graph_name, Graph::GraphType new_graph_type, int max_graph_size)
+            PublishedGraphData(void* new_address, std::string name, std::string new_description, Data::Type new_type, std::string new_graph_name, Graph::Type new_graph_type, int max_graph_size)
             {
-                address = new_address;
+                address     = new_address;
                 unique_name = name;
                 description = new_description;
-                type = new_type;
-                access = Data::Access::VIEW;
-                graph_name = new_graph_name;
-                graph_type = new_graph_type;
-                graph_size = max_graph_size;
+                type        = new_type;
+                access      = Data::Access::VIEW;
+                graph_name  = new_graph_name;
+                graph_type  = new_graph_type;
+                graph_size  = max_graph_size;
             }
+
             PublishedGraphData(std::string name)
             {
-                address = nullptr;
-                unique_name = name;
-                description = "";
-                type = Data::Type::NONE;
-                access = Data::Access::VIEW;
-                graph_name = "";
-                graph_type = Graph::GraphType::NONE;
-                graph_size = 0;
+                PublishedGraphData();
+                this->unique_name = name;
             }
+
             std::string Peek()
             {
                 //this is only if for if it's a string
@@ -171,33 +193,36 @@ namespace Essentials
 #pragma pack(push,1)
         struct PublishedData
         {
-            void* address;
-            std::string unique_name;
-            std::string description;
-            Data::Type type;
-            Data::Access access;
+            void*               address;
+            std::string         unique_name;
+            std::string         description;
+            Data::Type          type;
+            Data::Access        access;
 
             PublishedData()
             {
-
+                address       = nullptr;
+                unique_name   = "";
+                description   = "";
+                type          = Data::Type::NONE;
+                access        = Data::Access::VIEW;
             }
 
             PublishedData(void* new_address, std::string name, std::string new_description, Data::Type new_type)
             {
-                address = new_address;
-                unique_name = name;
-                description = new_description;
-                type = new_type;
-                access = Data::Access::VIEW;
+                this->address       = new_address;
+                this->unique_name   = name;
+                this->description   = new_description;
+                this->type          = new_type;
+                this->access        = Data::Access::VIEW;
             }
+
             PublishedData(std::string name)
             {
-                address = nullptr;
-                unique_name = name;
-                description = "";
-                type = Data::Type::NONE;
-                access = Data::Access::VIEW;
+                PublishedData();
+                this->unique_name   = name;
             }
+
             std::string Peek()
             {
                 //this is only if for if it's a string
@@ -257,27 +282,28 @@ namespace Essentials
 #pragma pack(push,1)
         struct PublishedFunction
         {
-            Funcptr address;
+            Funcptr                 address;
             //ObjectPointer<C> owner;
-            std::string unique_name;
-            std::string description;
-            Data::Type return_type;
-            Function::Access access;
+            std::string             unique_name;
+            std::string             description;
+            Data::Type              return_type;
+            Function::Access        access;
             std::vector<Data::Type> args;
 
             PublishedFunction()
             {
-
+                address     = nullptr;
+                // owner    = nullptr;
+                unique_name = "";
+                description = "";
+                return_type = Data::Type::NONE;
+                access      = Function::Access::EXECUTE;
             }
 
             PublishedFunction(std::string name)
             {
-                address = nullptr;
-                // owner = nullptr;
-                unique_name = name;
-                description = "";
-                return_type = Data::Type::NONE;
-                access = Function::Access::EXECUTE;
+                PublishedFunction();
+                this->unique_name = name;
             }
             PublishedFunction(Funcptr new_address, std::string name, std::string new_description)
             {
@@ -302,11 +328,11 @@ namespace Essentials
             PublishedFunction operator=(const PublishedFunction& old)
             {
                 PublishedFunction ret("ret");
-                ret.address = old.address;
+                ret.address     = old.address;
                 ret.unique_name = old.unique_name;
                 ret.description = old.description;
                 ret.return_type = old.return_type;
-                ret.access = old.access;
+                ret.access      = old.access;
                 return ret;
             }
             void Execute()
@@ -326,3 +352,5 @@ namespace Essentials
 
     } // End Communications
 } // End Essentials
+
+#endif // CPP_PUBLISHABLE_TYPES
