@@ -153,6 +153,123 @@ namespace Essentials
         }
 #endif
 
+        int8_t Web_Server::AddPublishedFunction(const PublishedFunction function)
+        {
+            PublishedFunction temp;
+            temp = function;
+
+            // Check if the unique_name already exists using this callable lambda function
+            if (std::any_of(mFunctions.begin(), mFunctions.end(),
+                [&](const PublishedFunction& existing)
+                {
+                    return existing.unique_name == temp.unique_name;
+                })) 
+            {
+                // Duplicate found, return failure
+                return -1;
+            }
+
+            // No duplicate found, add the function to the vector
+            mFunctions.push_back(temp);
+            return 0;
+        }
+
+        int8_t Web_Server::AddPublishedData(PublishedData data)
+        {
+            PublishedData temp;
+            temp = data;
+
+            // Check if the unique_name already exists using this callable lambda function
+            if (std::any_of(mDatas.begin(), mDatas.end(),
+                [&](const PublishedData& existing)
+                {
+                    return existing.unique_name == temp.unique_name;
+                }))
+            {
+                // Duplicate found, return failure
+                return -1;
+            }
+
+            // No duplicate found, add the function to the vector
+            mDatas.push_back(temp);
+            return 0;
+        }
+
+        int8_t Web_Server::AddPublishedGraphData(PublishedGraphData graph)
+        {
+            PublishedGraphData temp;
+            temp = graph;
+
+            // Check if the unique_name already exists using this callable lambda function
+            if (std::any_of(mGraphDatas.begin(), mGraphDatas.end(),
+                [&](const PublishedGraphData& existing)
+                {
+                    return existing.unique_name == temp.unique_name;
+                }))
+            {
+                // Duplicate found, return failure
+                return -1;
+            }
+
+            // No duplicate found, add the function to the vector
+            mGraphDatas.push_back(temp);
+            return 0;
+        }
+
+        int8_t Web_Server::GetNumberOfPublishedFunctions()
+        {
+            return static_cast<int8_t>(mFunctions.size());
+        }
+
+        int8_t Web_Server::GetNumberOfPublishedDatas()
+        {
+            return static_cast<int8_t>(mDatas.size());
+        }
+
+        int8_t Web_Server::GetNumberOfPublishedGraphDatas()
+        {
+            return static_cast<int8_t>(mGraphDatas.size());
+        }
+
+        std::vector<std::string> Web_Server::GetNamesOfPublishedFunctions() const
+        {
+            std::vector<std::string> functionNames;
+            functionNames.reserve(mFunctions.size());
+
+            for (const auto& function : mFunctions)
+            {
+                functionNames.push_back(function.unique_name);
+            }
+
+            return functionNames;
+        }
+
+        std::vector<std::string> Web_Server::GetNamesOfPublishedDatas() const
+        {
+            std::vector<std::string> dataNames;
+            dataNames.reserve(mDatas.size());
+
+            for (const auto& data : mDatas)
+            {
+                dataNames.push_back(data.unique_name);
+            }
+
+            return dataNames;
+        }
+
+        std::vector<std::string> Web_Server::GetNamesOfPublishedGraphDatas() const
+        {
+            std::vector<std::string> graphNames;
+            graphNames.reserve(mGraphDatas.size());
+
+            for (const auto& graph : mGraphDatas)
+            {
+                graphNames.push_back(graph.unique_name);
+            }
+
+            return graphNames;
+        }
+
         std::string Web_Server::GetLastError()
         {
             return WebServerErrorMap[mLastError];

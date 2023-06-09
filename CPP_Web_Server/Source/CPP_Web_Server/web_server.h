@@ -21,6 +21,7 @@
 #include "../Mongoose/mongoose.h"           // Mongoose functionality
 #include <thread>                           // Threading
 #include <vector>                           // vectors
+#include <algorithm>                        // algorithms
 #include "publishable_types.h"              // Publishable data types
 
 #ifdef CPP_TERMINAL
@@ -159,6 +160,45 @@ namespace Essentials
             int8_t GetMaxThreadPriorityValue();
 #endif
 
+            /// @brief Add a function to the web server to be accessed
+            /// @param function - [in] - A PublishedFunction to be added to the webserver. 
+            /// @return -1 on error (@param unique_name already exists, 0 on success
+            int8_t AddPublishedFunction(PublishedFunction function);
+
+            /// @brief Add a data to the web server.
+            /// @param data - [in] - A PublishedData to be added to the webserver. 
+            /// @return -1 on error (@param unique_name already exists, 0 on success
+            int8_t AddPublishedData(PublishedData data);
+
+            /// @brief Add a graph data to the web server.
+            /// @param graph - [in] - A PublishedGraphData to be added to the webserver.
+            /// @return -1 on error (@param unique_name already exists, 0 on success
+            int8_t AddPublishedGraphData(PublishedGraphData graph);
+
+            /// @brief Get the number of published functions.
+            /// @return 0+ indicating the number of published functions. 
+            int8_t GetNumberOfPublishedFunctions();
+            
+            /// @brief Get the number of published data elements.
+            /// @return 0+ indicating the number of published data elements. 
+            int8_t GetNumberOfPublishedDatas();
+
+            /// @brief Get the number of published graph data elements.
+            /// @return 0+ indicating the number of published graph data elements. 
+            int8_t GetNumberOfPublishedGraphDatas();
+
+            /// @brief Get the names of all the published functions.
+            /// @return a std::vector of std::strings with names of the published functions. 
+            std::vector<std::string> GetNamesOfPublishedFunctions() const;
+
+            /// @brief Get the names of all the published data elements.
+            /// @return a std::vector of std::strings with names of the published datas. 
+            std::vector<std::string> GetNamesOfPublishedDatas() const;
+
+            /// @brief Get the names of all the published graph data elements.
+            /// @return a std::vector of std::strings with names of the published graph datas. 
+            std::vector<std::string> GetNamesOfPublishedGraphDatas() const;
+
             /// @brief Get the last error
             /// @return String containing information on the last error
             std::string GetLastError();
@@ -254,9 +294,8 @@ namespace Essentials
             static Web_Server*              mInstance;              // Pointer to the instance
             WebServerThreadPriority         mThreadPriority;        // Thread priority for windows.
             std::vector<PublishedFunction>  mFunctions;             // Vector of published functions to the webpage. 
-            std::vector<PublishedData>      mData;                  // Vector of published data to the webpage. 
-            std::vector<PublishedGraphData> mGraphData;             // Vector of published graph data to the webpage. 
-
+            std::vector<PublishedData>      mDatas;                 // Vector of published data to the webpage. 
+            std::vector<PublishedGraphData> mGraphDatas;            // Vector of published graph data to the webpage. 
 
 #ifdef CPP_TERMINAL
             Essentials::Utilities::Terminal* mTerminal;    

@@ -15,9 +15,9 @@ int main()
     std::string root = "/mnt/c/website";
 #endif
 
-    Essentials::Utilities::Timer*            timer    = timer->GetInstance();
-    Essentials::Utilities::Log*                log        = log->GetInstance();
-    Essentials::Communications::Web_Server* ws        = ws->GetInstance();
+    Essentials::Utilities::Timer*           timer   = timer->GetInstance();
+    Essentials::Utilities::Log*             log     = log->GetInstance();
+    Essentials::Communications::Web_Server* ws      = ws->GetInstance();
 
     // Initialize logger
 #ifdef WIN32

@@ -10,6 +10,9 @@
 #pragma once
 ///////////////////////////////////////////////////////////////////////////////
 //
+//    Includes:
+#include <functional>                       // function pointer
+// 
 //    Defines:
 //          name                        reason defined
 //          --------------------        ---------------------------------------
@@ -22,7 +25,7 @@ namespace Essentials
 {
     namespace Communications
     {
-        typedef void (*Funcptr)();
+        using Funcptr = std::function<void()>;
 
         namespace Data
         {
@@ -93,104 +96,6 @@ namespace Essentials
         }
 
 #pragma pack(push,1)
-        struct PublishedGraphData
-        {
-            void*           address;
-            std::string     unique_name;
-            std::string     description;
-            Data::Type      type;
-            Data::Access    access;
-            std::string     graph_name;
-            Graph::Type     graph_type;
-            int             graph_size;
-
-            PublishedGraphData()
-            {
-                address     = nullptr;
-                unique_name = "";
-                description = "";
-                type        = Data::Type::NONE;
-                access      = Data::Access::VIEW;
-                graph_name  = "";
-                graph_type  = Graph::Type::NONE;
-                graph_size  = 0;
-            }
-
-            PublishedGraphData(void* new_address, std::string name, std::string new_description, Data::Type new_type, std::string new_graph_name, Graph::Type new_graph_type, int max_graph_size)
-            {
-                address     = new_address;
-                unique_name = name;
-                description = new_description;
-                type        = new_type;
-                access      = Data::Access::VIEW;
-                graph_name  = new_graph_name;
-                graph_type  = new_graph_type;
-                graph_size  = max_graph_size;
-            }
-
-            PublishedGraphData(std::string name)
-            {
-                PublishedGraphData();
-                this->unique_name = name;
-            }
-
-            std::string Peek()
-            {
-                //this is only if for if it's a string
-                //It can't be done in a switch/case for some reason...
-                std::string* tmp_string = static_cast<std::string*>(address);
-
-                std::string ret;
-                switch (type)
-                {
-                case Data::Type::NONE:
-                    break;
-                case Data::Type::CHAR:
-                    ret = std::to_string(*(char*)address);
-                    break;
-                case Data::Type::UCHAR:
-                    ret = std::to_string(*(unsigned char*)address);
-                    break;
-                case Data::Type::SHORT:
-                    ret = std::to_string(*(short*)address);
-                    break;
-                case Data::Type::USHORT:
-                    ret = std::to_string(*(unsigned short*)address);
-                    break;
-                case Data::Type::INT:
-                    ret = std::to_string(*(int*)address);
-                    break;
-                case Data::Type::UINT:
-                    ret = std::to_string(*(unsigned int*)address);
-                    break;
-                case Data::Type::DOUBLE:
-                    ret = std::to_string(*(double*)address);
-                    break;
-                case Data::Type::BOOL:
-                    if (true == *(bool*)address)
-                    {
-                        ret = "true";
-                    }
-                    else
-                    {
-                        ret = "false";
-                    }
-                    break;
-                case Data::Type::FLOAT:
-                    ret = std::to_string(*(float*)address);
-                    break;
-                case Data::Type::STRING:
-                    ret = *tmp_string;
-                    break;
-                default:
-                    ret = "Unsupported Type";
-                }
-                return ret;
-            }
-        };
-#pragma pack(pop)
-
-#pragma pack(push,1)
         struct PublishedData
         {
             void*               address;
@@ -201,26 +106,29 @@ namespace Essentials
 
             PublishedData()
             {
-                address       = nullptr;
-                unique_name   = "";
-                description   = "";
-                type          = Data::Type::NONE;
-                access        = Data::Access::VIEW;
+                address     = nullptr;
+                unique_name = "";
+                description = "";
+                type        = Data::Type::NONE;
+                access      = Data::Access::VIEW;
             }
 
             PublishedData(void* new_address, std::string name, std::string new_description, Data::Type new_type)
             {
-                this->address       = new_address;
-                this->unique_name   = name;
-                this->description   = new_description;
-                this->type          = new_type;
-                this->access        = Data::Access::VIEW;
+                address     = new_address;
+                unique_name = name;
+                description = new_description;
+                type        = new_type;
+                access      = Data::Access::VIEW;
             }
 
             PublishedData(std::string name)
             {
-                PublishedData();
-                this->unique_name   = name;
+                address     = nullptr;
+                unique_name = name;
+                description = "";
+                type        = Data::Type::NONE;
+                access      = Data::Access::VIEW;
             }
 
             std::string Peek()
@@ -302,17 +210,21 @@ namespace Essentials
 
             PublishedFunction(std::string name)
             {
-                PublishedFunction();
-                this->unique_name = name;
+                address     = nullptr;
+                // owner    = nullptr;
+                unique_name = name;
+                description = "";
+                return_type = Data::Type::NONE;
+                access      = Function::Access::EXECUTE;
             }
             PublishedFunction(Funcptr new_address, std::string name, std::string new_description)
             {
-                address = new_address;
-                //  owner = nullptr;
+                address     = new_address;
+                //  owner   = nullptr;
                 unique_name = name;
                 description = new_description;
                 return_type = Data::Type::NONE;
-                access = Function::Access::EXECUTE;
+                access      = Function::Access::EXECUTE;
             }
 
             // PublishedFunction(void* object, Funcptr new_address, std::string name, std::string new_description)
@@ -346,6 +258,110 @@ namespace Essentials
                 // {
                 //     owner.get_object()->f();
                 // }
+            }
+        };
+#pragma pack(pop)
+
+#pragma pack(push,1)
+        struct PublishedGraphData
+        {
+            void* address;
+            std::string     unique_name;
+            std::string     description;
+            Data::Type      type;
+            Data::Access    access;
+            std::string     graph_name;
+            Graph::Type     graph_type;
+            int             graph_size;
+
+            PublishedGraphData()
+            {
+                address = nullptr;
+                unique_name = "";
+                description = "";
+                type = Data::Type::NONE;
+                access = Data::Access::VIEW;
+                graph_name = "";
+                graph_type = Graph::Type::NONE;
+                graph_size = 0;
+            }
+
+            PublishedGraphData(void* new_address, std::string name, std::string new_description, Data::Type new_type, std::string new_graph_name, Graph::Type new_graph_type, int max_graph_size)
+            {
+                address = new_address;
+                unique_name = name;
+                description = new_description;
+                type = new_type;
+                access = Data::Access::VIEW;
+                graph_name = new_graph_name;
+                graph_type = new_graph_type;
+                graph_size = max_graph_size;
+            }
+
+            PublishedGraphData(std::string name)
+            {
+                address = nullptr;
+                unique_name = name;
+                description = "";
+                type = Data::Type::NONE;
+                access = Data::Access::VIEW;
+                graph_name = "";
+                graph_type = Graph::Type::NONE;
+                graph_size = 0;
+            }
+
+            std::string Peek()
+            {
+                //this is only if for if it's a string
+                //It can't be done in a switch/case for some reason...
+                std::string* tmp_string = static_cast<std::string*>(address);
+
+                std::string ret;
+                switch (type)
+                {
+                case Data::Type::NONE:
+                    break;
+                case Data::Type::CHAR:
+                    ret = std::to_string(*(char*)address);
+                    break;
+                case Data::Type::UCHAR:
+                    ret = std::to_string(*(unsigned char*)address);
+                    break;
+                case Data::Type::SHORT:
+                    ret = std::to_string(*(short*)address);
+                    break;
+                case Data::Type::USHORT:
+                    ret = std::to_string(*(unsigned short*)address);
+                    break;
+                case Data::Type::INT:
+                    ret = std::to_string(*(int*)address);
+                    break;
+                case Data::Type::UINT:
+                    ret = std::to_string(*(unsigned int*)address);
+                    break;
+                case Data::Type::DOUBLE:
+                    ret = std::to_string(*(double*)address);
+                    break;
+                case Data::Type::BOOL:
+                    if (true == *(bool*)address)
+                    {
+                        ret = "true";
+                    }
+                    else
+                    {
+                        ret = "false";
+                    }
+                    break;
+                case Data::Type::FLOAT:
+                    ret = std::to_string(*(float*)address);
+                    break;
+                case Data::Type::STRING:
+                    ret = *tmp_string;
+                    break;
+                default:
+                    ret = "Unsupported Type";
+                }
+                return ret;
             }
         };
 #pragma pack(pop)
